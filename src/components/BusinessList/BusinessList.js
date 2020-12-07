@@ -6,7 +6,7 @@ export const BusinessList = ({ businesses }) => {
   return (
     <div className="BusinessList">
       {businesses.map((business) => {
-        return <Business business={business}></Business>;
+        return <Business business={business} key={business.id}></Business>;
       })}
     </div>
   );
