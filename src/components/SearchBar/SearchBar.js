@@ -1,18 +1,51 @@
-import React from "react";
+import React, { useState } from "react";
 import "./SearchBar.css";
 
-const sortByOptions = {
-  "Best Match": "best_match",
-  "Highest Rated": "rating",
-  "Most Reviewed": "review_count",
-};
+export const SearchBar = ({ searchYelp }) => {
+  const [term, setTerm] = useState("");
+  const [location, setLocation] = useState("");
+  const [sortBy, setSortBy] = useState("best_match");
 
-export const SearchBar = () => {
+  const sortByOptions = {
+    "Best Match": "best_match",
+    "Highest Rated": "rating",
+    "Most Reviewed": "review_count",
+  };
+
   const renderSortByOptions = () => {
     return Object.keys(sortByOptions).map((sortByOption) => {
       const sortByOptionValue = sortByOptions[sortByOption];
-      return <li key={sortByOptionValue}>{sortByOption}</li>;
+      return (
+        <li
+          key={sortByOptionValue}
+          className={getSortByClass(sortByOptionValue)}
+          onClick={() => handleSortByChange(sortByOptionValue)}
+        >
+          {sortByOption}
+        </li>
+      );
     });
+  };
+
+  const handleSortByChange = (sortByOption) => {
+    setSortBy(sortByOption);
+  };
+
+  const getSortByClass = (sortByOption) => {
+    if (sortBy === sortByOption) {
+      return "active";
+    }
+    return "";
+  };
+
+  const handleTermChange = (e) => {
+    setTerm(e.target.value);
+  };
+  const handleLocationChange = (e) => {
+    setLocation(e.target.value);
+  };
+  const handleSearch = (e) => {
+    searchYelp(term, location, sortBy);
   };
   return (
     <div className="SearchBar">
@@ -20,11 +53,19 @@ export const SearchBar = () => {
         <ul>{renderSortByOptions()}</ul>
       </div>
       <div className="SearchBar-fields">
-        <input placeholder="Search Businesses" />
-        <input placeholder="Where?" />
+        <input
+          placeholder="Search Businesses"
+          onChange={(e) => handleTermChange(e)}
+          value={term}
+        />
+        <input
+          placeholder="Where?"
+          onChange={(e) => handleLocationChange(e)}
+          value={location}
+        />
       </div>
       <div className="SearchBar-submit">
-        <a>Let's Go</a>
+        <a onClick={handleSearch}>Let's Go</a>
       </div>
     </div>
   );
